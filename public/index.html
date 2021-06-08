@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%= require('raw-loader!./meta.html') %>
+    <title><%= htmlWebpackPlugin.options.title %></title>
+    <!-- <script src='../node_modules/lib-flexible/flexible.js'></script> -->
+    <script> <%= require('raw-loader!babel-loader!../node_modules/lib-flexible/flexible.js') %> </script>
+</head>
+
+<body>
+    <p>I am index page</p>
+</body>
+
+</html>
