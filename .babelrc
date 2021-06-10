@@ -3,6 +3,7 @@
     [
       "@babel/preset-env",
       {
+        //动态polyfill文件
         "targets": {
           //     "edge": "17",
           //     "firefox": "60",

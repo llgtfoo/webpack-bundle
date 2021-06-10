@@ -1,10 +1,13 @@
 body,
 html {
-  background: url("../image/12.jpg") no-repeat;
+  background: url("../image/12.png") no-repeat;
 }
 p {
   font-weight: 100;
   font-size: 15px;
   font-family: "Courier New", Courier, monospace;
   line-height: 40px;
+}
+.llgtfoo {
+  color: cyan;
 }

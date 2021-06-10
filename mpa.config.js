@@ -13,6 +13,11 @@ const smp = new SpeedMeasureWebpackPlugin() //耗时分析
 const webpackBundleAnalyzer = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin //体积分析
 const hardSourceWebpackPlugin = require("hard-source-webpack-plugin")
+const PurgeCSSPlugin = require("purgecss-webpack-plugin")
+const PATHS = {
+  //去除无用css文件夹
+  src: path.join(projectRoot, "src"),
+}
 //自定义生成多页面入口
 const getEntryAndPLugin = () => {
   const entry = {}
@@ -248,6 +253,10 @@ module.exports = smp.wrap({
       chunkFilename: "[id].css",
       filename: "css/[name]_[contenthash:8].css",
     }),
+    //去除没用到的css与mini-css-extract-plugin结合使用
+    new PurgeCSSPlugin({
+      paths: glob.sync(`${PATHS.src}/**/*`, { nodir: true }),
+    }),
     //缓存
     // new hardSourceWebpackPlugin(),
   ],
@@ -290,6 +299,7 @@ module.exports = smp.wrap({
         },
         commons: {
           name: "commons",
+          test: /\.js$/,
           chunks: "all",
           minChunks: 2,
         },

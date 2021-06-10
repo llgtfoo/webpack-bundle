@@ -1,5 +1,6 @@
 const path = require("path")
 const webpack = require("webpack")
+const glob = require("glob")
 const { CleanWebpackPlugin } = require("clean-webpack-plugin")
 const htmlWebpackPlugin = require("html-webpack-plugin")
 const minicss = require("mini-css-extract-plugin")
@@ -14,6 +15,11 @@ const smp = new SpeedMeasureWebpackPlugin() //耗时分析
 const webpackBundleAnalyzer = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin //体积分析
 const hardSourceWebpackPlugin = require("hard-source-webpack-plugin")
+const PurgeCSSPlugin = require("purgecss-webpack-plugin")
+const PATHS = {
+  //去除无用css文件夹
+  src: path.join(projectRoot, "src"),
+}
 module.exports = smp.wrap({
   mode: "none", //production
   devtool: "source-map", //生成map文件
@@ -90,7 +96,7 @@ module.exports = smp.wrap({
         test: /\.(png|jpe?g|gif|jpg)$/,
         use: [
           {
-            loader: "url-loader",
+            loader: "file-loader",
             options: {
               name: "[name]_[hash:8].[ext]",
               outputPath: "images/",
@@ -252,6 +258,10 @@ module.exports = smp.wrap({
       chunkFilename: "[id].css",
       filename: "css/[name]_[contenthash:8].css",
     }),
+    //去除没用到的css与mini-css-extract-plugin结合使用
+    new PurgeCSSPlugin({
+      paths: glob.sync(`${PATHS.src}/**/*`, { nodir: true }),
+    }),
     //css压缩
     // new OptimizeCssAssetsPlugin({
     //   assetNameRegExp: /\.css$/g,
@@ -299,8 +309,10 @@ module.exports = smp.wrap({
         },
         commons: {
           name: "commons",
+          test: /\.js$/,
           chunks: "all",
           minChunks: 2,
+          enforce: true,
         },
       },
     },
